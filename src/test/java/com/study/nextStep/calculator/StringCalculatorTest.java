@@ -25,7 +25,7 @@ public class StringCalculatorTest {
 
     @Test
     void sendComma(){
-        assertEquals(4,stringCalculator.add("2,2"));
+        assertEquals(6,stringCalculator.add("2,2,2"));
     }
 
     @Test
@@ -35,7 +35,7 @@ public class StringCalculatorTest {
 
     @Test
     void sendCustom(){
-        assertEquals(8, stringCalculator.add("//*\n5*3"));
+        assertEquals(10, stringCalculator.add("//^\n5^3^2"));
     }
 
     @Test
