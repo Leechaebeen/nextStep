@@ -19,6 +19,11 @@ public class StringCalculatorTest {
     }
 
     @Test
+    void sendNull(){
+        assertEquals(0, stringCalculator.add(null));
+    }
+
+    @Test
     void sendOneLength(){
         assertEquals(5, stringCalculator.add("5"));
     }
@@ -29,19 +34,19 @@ public class StringCalculatorTest {
     }
 
     @Test
-    void sendQuotes(){
-        assertEquals(5, stringCalculator.add("2;3"));
+    void sendColon(){
+        assertEquals(6, stringCalculator.add("2:3:1"));
     }
 
     @Test
     void sendCustom(){
-        assertEquals(10, stringCalculator.add("//^\n5^3^2"));
+        assertEquals(10, stringCalculator.add("//;\n5;3;2"));
     }
 
     @Test
     void sendMinus(){
         assertThrows(RuntimeException.class, () -> {
-            stringCalculator.add("-1");
+            stringCalculator.add("-10,2,3");
         });
     }
 

@@ -23,30 +23,33 @@ public class StringCalculator {
     public int add(String text){
 
         // 빈 문자열 체크
-        if(text.isEmpty()){
+        if(text == null || text.trim().isEmpty()) {
             return 0;
         }
 
-        // 숫자 하나가 문자열로 들어온 경우
-        if(text.length() == 1){
+        try {
             int num = Integer.parseInt(text);
             checkMinus(num);
             return num;
         }
+        catch(NumberFormatException e) {
+            return calculateStringWithDelimiter(text);
+        }
+    }
 
+    private int calculateStringWithDelimiter(String text){
         List<String> result = new ArrayList<>();
         if(hasCustomPattern(text)){
-             result = getCustomPatternResult(text);
-            if(hasCommaOrQuotes(text)){
-               result.addAll(Arrays.stream(getCommaOrQuotesResult(text)).collect(Collectors.toList()));
-            }
+            result = getCustomPatternResult(text);
+        }
+
+        if(hasCommaOrQuotes(text)) {
+            result.addAll(Arrays.stream(getCommaOrColonResult(text)).collect(Collectors.toList()));
         }
 
         return calculator(result);
-
     }
 
-    
     private void checkMinus(int num) {
         if(num < 0){
             throw new RuntimeException();
@@ -54,11 +57,11 @@ public class StringCalculator {
     }
 
     private boolean hasCommaOrQuotes(String text) {
-        return text.contains(",") || text.contains(";");
+        return text.contains(",") || text.contains(":");
     }
 
-    private String[] getCommaOrQuotesResult(String text){
-        return text.split(",|;");
+    private String[] getCommaOrColonResult(String text){
+        return text.split(",|:");
     }
 
     private boolean hasCustomPattern(String text) {
@@ -66,14 +69,13 @@ public class StringCalculator {
     }
 
     private List<String> getCustomPatternResult(String text){
-        List result = new ArrayList();
-        Matcher m = Pattern.compile("//(.)\n(.*)").matcher(text);
-        while(m.find()){
-            int test = m.groupCount();
-            System.out.println(test);
-            String[] tmp = m.group(2).split(m.group(1)); // 5^3
-            // 두 개 이상인 경우 고려
-            System.out.println(tmp);
+        List<String> result = new ArrayList<>();
+        Matcher matcher = Pattern.compile("//(.)\n(.*)").matcher(text);
+        while(matcher.find()){
+            String delimiter = matcher.group(1);
+            String str = matcher.group(2);
+            String[] tmp = str.split(delimiter);
+            result = Arrays.stream(tmp).toList();
         }
         return result;
     }
@@ -87,5 +89,4 @@ public class StringCalculator {
         }
         return result;
     }
-
 }
